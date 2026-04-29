@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "pitch-video",
+  "description": "Turn a working prototype + your own voice into a polished pitch video. Slides, demo capture, voice sync — all built around your audio.",
+  "owner": {
+    "name": "Joyceqx",
+    "url": "https://github.com/Joyceqx"
+  },
+  "plugins": [
+    {
+      "name": "pitch-video",
+      "description": "Orchestrates a 7-gate workflow for producing a 2–4 minute pitch video: alignment interview → script + slide deck → user records voiceover → final video assembly with auto-alignment fixes. The user's voice is the timing source of truth; visuals are sized to it.",
+      "source": "./plugins/pitch-video",
+      "category": "productivity",
+      "tags": ["pitch", "video", "presentation", "demo", "slides", "showcase"]
+    }
+  ]
+}

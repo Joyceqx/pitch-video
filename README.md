@@ -22,21 +22,9 @@ This skill flips that. **Your recorded voice is the timing clock.** Slides, prot
 
 ## Installation
 
-Three ways to install — pick whichever matches how you use Claude Code.
+> **Requires Claude Code** (CLI or desktop developer app). This plugin runs local tooling — Playwright, ffmpeg, Whisper — and won't work in Claude.ai or the Claude Desktop consumer chat app.
 
-### 1. Desktop app (UI, recommended)
-
-1. Open Claude Code Desktop → click **+** next to the prompt box → **Plugins**
-2. Open the **Marketplaces** tab and run:
-   ```
-   /plugin marketplace add Joyceqx/pitch-video
-   ```
-3. Open the **Discover** tab → install **pitch-video**
-4. Run `/reload-plugins` to activate
-
-### 2. Slash command (CLI or desktop)
-
-From any Claude Code session:
+From any Claude Code session, run:
 
 ```
 /plugin marketplace add Joyceqx/pitch-video
@@ -44,23 +32,29 @@ From any Claude Code session:
 /reload-plugins
 ```
 
-### 3. Direct git clone (CLI, fastest)
+That's it. The plugin appears in `/plugin` → Installed and the skill is invokable as `/pitch-video:pitch-video`.
+
+### Local development install
+
+If you've cloned the repo and want to point Claude Code at your local copy:
 
 ```bash
-git clone https://github.com/Joyceqx/pitch-video.git ~/.claude/plugins/pitch-video
+claude --plugin-dir /path/to/pitch-video/plugins/pitch-video
 ```
-
-Desktop and CLI share `~/.claude/`, so this works for both.
 
 ### Activate
 
-Once installed, invoke from any Claude Code session:
+Once installed, just describe what you want in any Claude Code session:
 
 ```
 > Make a 3-minute pitch video for my prototype at https://example.com
 ```
 
-The skill activates on phrases like *"make a pitch video"*, *"showcase submission video"*, *"turn this into a 3-minute demo"*. Skills installed via plugin are namespaced — yours will appear as `/pitch-video:pitch-video` if you want to invoke it explicitly.
+The skill auto-activates on phrases like *"make a pitch video"*, *"showcase submission video"*, *"turn this into a 3-minute demo"*. To invoke it explicitly:
+
+```
+/pitch-video:pitch-video
+```
 
 ### Manual / as a reference
 
