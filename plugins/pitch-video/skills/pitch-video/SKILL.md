@@ -31,27 +31,55 @@ The script suggests a venv at `~/.venv-pitch/` to keep installs isolated.
 
 ### Gate 1: Alignment interview → AGENDA.md
 
-Ask the user the following — but **cap chat at 3 rounds of clarification**. After the third round, write everything to `AGENDA.md` in the user's working directory and tell the user to edit it directly. Do not keep iterating in chat.
+**How to run this gate:**
+1. Open with: *"I'm going to ask you 7 quick questions to align on what we're building. Pick from the options or write your own — there's no wrong answer."*
+2. Ask **ONE question per turn**. Wait for the user's answer before moving on. Do not stack questions.
+3. For multiple-choice questions, use the `AskUserQuestion` tool when available — it gives the user a clean picker with an "Other" text input for free-form answers.
+4. After each answer, summarize back in one line ("Got it: hybrid slides + demo, ~3 min, GSB judges") and move to the next question.
+5. **Cap clarification at 3 rounds total** (across all questions combined). After three back-and-forths without progress, write what you have to `AGENDA.md` and tell the user to edit it directly. Do not keep iterating in chat.
 
-What to ask (in this order):
+The 7 questions, in order:
 
-1. **Pitch context** — audience, format (live / video submission), length budget, stakes (class / investor / demo day).
-2. **Style** — pick one: *professional · casual · academic · sales-y*. Give a one-line example for each.
-3. **Tone constraints** — em-dashes ok? jargon level? humor? technical depth?
-4. **Three things they MUST hit** and **three to avoid**.
-5. **Prototype URL + the demo flow** — what page to land on, what to type, what to click. Concrete sequence.
-6. **Existing assets** — proposal docs, brand colors, deck templates, prior pitches.
-7. **Reference prototype footage?** Yes/no. Some users like to watch the prototype while recording; others read straight from script.
+**Q1. Pitch context** — audience, length budget, stakes.
+> Open question. Free-form answer.
 
-Use `templates/agenda.md` as the AGENDA.md skeleton. Fill it in from the chat.
+**Q2. Video format** — pick one (or describe a custom mix):
+- **(a) Slides-only presentation** — narrated slides, no live prototype footage. Best when the prototype isn't visually compelling, or when the message is conceptual.
+- **(b) Hybrid (slides + demo)** — slides bookending a live prototype walkthrough. Best for product/showcase pitches. Default for most class submissions.
+- **(c) Demo-focused** — voiceover narrating prototype navigation end-to-end, no static slides (or just a title + end card). Best when the product itself tells the story.
+- **(d) Custom mix** — user describes their own structure (e.g. "two demo segments separated by a stats slide").
 
-After the file is written, send it to the user for approval. If they want changes, edit the file (don't restart the chat).
+**Q3. Style** — pick one:
+- **Professional** — investor-ready, full sentences, clear framing
+- **Casual / verbal** — contractions, sentence fragments, conversational
+- **Academic** — methodology-forward, technical depth, citations
+- **Sales-y** — outcome-driven, value prop hammered, call-to-action close
+- *Other / mixed* — user describes
+
+**Q4. Tone constraints** — em-dashes ok? jargon level? humor? technical depth? Free-form, but offer sensible defaults.
+
+**Q5. Three MUST-hits and three to AVOID.** Free-form list.
+
+**Q6. Prototype URL + demo flow** — skip entirely if format is (a) slides-only. Otherwise: what URL to land on, what to type, what to click. Concrete sequence.
+
+**Q7. Reference prototype footage during recording?** — skip if format is (a). Otherwise: yes/no. Separate from the final video format — this is just a rehearsal aid (a silent prototype walkthrough the user watches while reading the script).
+
+Existing assets (proposal docs, brand colors, prior pitches) can be mentioned by the user any time during the interview, or pointed to via paths in `AGENDA.md` after.
+
+Use `templates/agenda.md` as the AGENDA.md skeleton. Fill it in incrementally as answers come in.
+
+After all 7 are answered, write the full `AGENDA.md` and send it to the user for approval. If they want changes, edit the file (don't restart the chat).
 
 ### Gate 2: Script + slide copy together
 
-Generate `SCRIPT.md` containing both the spoken script AND the slide-by-slide copy. They live together in one doc so the user can see the script and the slide that goes with it side by side.
+Generate `SCRIPT.md` — the contents adapt to the chosen video format from gate 1:
 
-Format per section:
+- **Slides-only (a)**: spoken script + slide-by-slide copy. No demo cue card.
+- **Hybrid (b)**: spoken script + slide-by-slide copy + demo cue card (what to click, what to say while clicking).
+- **Demo-focused (c)**: spoken script timed to prototype actions (each script line tied to a click/type/scroll beat). No slide copy except optional title + end card.
+- **Custom mix (d)**: combine the above per section as the user described.
+
+Format per section (hybrid example):
 
 ```markdown
 ## Section 1: Problem  ·  ~38s
@@ -66,20 +94,29 @@ Format per section:
 - Body: <text>
 ```
 
-Word-budget the script: aim for 130–150 wpm at the user's stated length. Show a word-count and time-estimate per section.
+For demo-focused sections, format like:
+```markdown
+## Section 2: Live walkthrough  ·  ~75s
 
-If the demo segment exists, include the demo cue card in this same doc — what to click, what to say while clicking.
+### Spoken script (timed to prototype actions)
+> [0:00–0:08] On landing page: "Here's the buyer side..."
+> [0:08–0:25] After typing query: "Watch — results rank live..."
+> [0:25–0:40] On work detail: "Every artist verified..."
+```
+
+Word-budget the script: aim for 130–150 wpm at the user's stated length. Show a word-count and time-estimate per section.
 
 **Send to user. Wait for approval.** This is the biggest taste gate. Iterate ONE more time if asked. After two rounds, ask the user to edit SCRIPT.md directly.
 
-### Gate 3: Slide deck rendered
+### Gate 3: Slide deck rendered (format-aware)
 
-Invoke the `frontend-design` skill (or `frontend-design:frontend-design` if that variant is available) with:
-- The slide copy from SCRIPT.md
-- The aesthetic guidance from AGENDA.md (style, tone)
-- A constraint that the deck must work as a 1920×1080 single-file HTML with keyboard navigation (arrow keys advance slides)
+Branch on the format chosen at gate 1:
 
-Output: `presentation/index.html`. Open it in the browser for the user to review.
+- **Slides-only (a) or Hybrid (b)**: invoke the `frontend-design` skill (or `frontend-design:frontend-design` if available) with the slide copy from SCRIPT.md and aesthetic guidance from AGENDA.md. Constrain the deck to 1920×1080 single-file HTML with keyboard navigation. Output: `presentation/index.html`.
+- **Demo-focused (c)**: skip a full deck. If the agenda calls for a title or end card, generate a minimal 1–2 slide HTML at `presentation/index.html` with just those cards.
+- **Custom mix (d)**: build only the slides the user actually called for in their structure.
+
+Open whatever was built for the user to review.
 
 **If reference footage was requested at gate 1**, also run:
 ```
@@ -92,7 +129,7 @@ python ${CLAUDE_PLUGIN_ROOT}/skills/pitch-video/scripts/record_demo.py \
 
 That gives the user a generous (~60s) silent walk-through of the prototype to watch while practicing. It's not the final demo recording — that comes at gate 5, sized to the actual audio.
 
-User approves the deck (look + copy).
+User approves what was built.
 
 ### Gate 4: User records voiceover
 
@@ -102,30 +139,38 @@ Tell the user, verbatim:
 
 Wait. Do not generate the video until the file exists.
 
-### Gate 5: Sized visual capture
+### Gate 5: Sized visual capture (format-aware)
 
 Once `voiceover.m4a` exists:
 
-1. Transcribe with timestamps:
+1. Transcribe with timestamps (always):
    ```
    python ${CLAUDE_PLUGIN_ROOT}/skills/pitch-video/scripts/transcribe.py voiceover.m4a > transcript.json
    ```
 2. Detect section boundaries by matching trigger phrases from SCRIPT.md against the transcript. Compute exact section durations.
-3. Capture slides as PNGs:
-   ```
-   python ${CLAUDE_PLUGIN_ROOT}/skills/pitch-video/scripts/capture_slides.py \
-     --deck presentation/index.html \
-     --output slides/
-   ```
-4. Record the prototype demo, **sized to the demo-narration window from the transcript**:
-   ```
-   python ${CLAUDE_PLUGIN_ROOT}/skills/pitch-video/scripts/record_demo.py \
-     --url <prototype-url> \
-     --flow <flow-name> \
-     --duration <demo-narration-seconds-from-transcript> \
-     --output prototype/prototype.webm
-   ```
-   No time-stretching unless mismatch is < 1.5s.
+
+Then branch on format:
+
+- **Slides-only (a)**: capture slides only.
+  ```
+  python ${CLAUDE_PLUGIN_ROOT}/skills/pitch-video/scripts/capture_slides.py \
+    --deck presentation/index.html --output slides/
+  ```
+
+- **Hybrid (b)**: capture slides AND record the prototype demo sized to the demo-narration window from the transcript.
+  ```
+  python ${CLAUDE_PLUGIN_ROOT}/skills/pitch-video/scripts/capture_slides.py \
+    --deck presentation/index.html --output slides/
+  python ${CLAUDE_PLUGIN_ROOT}/skills/pitch-video/scripts/record_demo.py \
+    --url <prototype-url> --flow <flow-name> \
+    --duration <demo-seconds-from-transcript> --output prototype/prototype.webm
+  ```
+
+- **Demo-focused (c)**: record one prototype walkthrough sized to the full audio length (minus any title/end cards). Capture title/end card slide(s) if they exist.
+
+- **Custom mix (d)**: capture slides for slide-segments, record one prototype clip per demo-segment, each sized to its own narration window.
+
+No time-stretching unless mismatch is < 1.5s.
 
 ### Gate 6: Final video assembled
 
