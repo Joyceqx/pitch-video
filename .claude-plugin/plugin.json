@@ -1,0 +1,9 @@
+{
+  "name": "pitch-video",
+  "description": "Turn a working prototype + a script you read yourself into a polished pitch video. Slides, demo capture, voice sync — all built around your audio, never the other way around.",
+  "author": {
+    "name": "Joyce Yu",
+    "email": "qxyu@stanford.edu"
+  },
+  "version": "0.1.0"
+}
