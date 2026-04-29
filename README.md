@@ -22,19 +22,45 @@ This skill flips that. **Your recorded voice is the timing clock.** Slides, prot
 
 ## Installation
 
-### As a Claude Code plugin
+Three ways to install — pick whichever matches how you use Claude Code.
 
-```bash
-git clone https://github.com/<your-username>/pitch-video.git ~/.claude/plugins/pitch-video
+### 1. Desktop app (UI, recommended)
+
+1. Open Claude Code Desktop → click **+** next to the prompt box → **Plugins**
+2. Open the **Marketplaces** tab and run:
+   ```
+   /plugin marketplace add Joyceqx/pitch-video
+   ```
+3. Open the **Discover** tab → install **pitch-video**
+4. Run `/reload-plugins` to activate
+
+### 2. Slash command (CLI or desktop)
+
+From any Claude Code session:
+
+```
+/plugin marketplace add Joyceqx/pitch-video
+/plugin install pitch-video@pitch-video
+/reload-plugins
 ```
 
-Then invoke from a Claude Code session:
+### 3. Direct git clone (CLI, fastest)
+
+```bash
+git clone https://github.com/Joyceqx/pitch-video.git ~/.claude/plugins/pitch-video
+```
+
+Desktop and CLI share `~/.claude/`, so this works for both.
+
+### Activate
+
+Once installed, invoke from any Claude Code session:
 
 ```
 > Make a 3-minute pitch video for my prototype at https://example.com
 ```
 
-The skill activates automatically when Claude detects pitch-video intent.
+The skill activates on phrases like *"make a pitch video"*, *"showcase submission video"*, *"turn this into a 3-minute demo"*. Skills installed via plugin are namespaced — yours will appear as `/pitch-video:pitch-video` if you want to invoke it explicitly.
 
 ### Manual / as a reference
 
